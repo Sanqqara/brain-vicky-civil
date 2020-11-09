@@ -17,7 +17,10 @@ export class Home extends Component {
             distance: 0,
             h1: 0,
             h2: 0,
-            slope: 0
+            slope: 0,
+            zValue: 0,
+            zInputHidden: true,
+            section: ""
         }
     }
 
@@ -118,6 +121,15 @@ export class Home extends Component {
         this.setState({ slope: slope })
     }
 
+    sectionSelect = (e) => {
+        this.setState({ section: e.value })
+        if (e.value === "Trapezoidal") {
+            this.setState({ zInputHidden: false })
+        } else {
+            this.setState({ zInputHidden: true })
+        }
+    }
+
     render() {
         const options = [
             { value: "Trapezoidal", label: "Trapezoidal" },
@@ -161,7 +173,7 @@ export class Home extends Component {
                             </div>
                             <div className="col-4 my-3">
                                 <label>Select a section</label>
-                                <Select options={options} />
+                                <Select options={options} onChange={this.sectionSelect.bind(this)} />
                             </div>
                         </div>
                         <div className="row my-4">
@@ -201,6 +213,10 @@ export class Home extends Component {
                                 <input type="number" className="form-control" onClick={(e) => this.setState({ breadth: e.target.value })} />
                                 <label>Enter Depth</label>
                                 <input type="number" className="form-control" onClick={(e) => this.setState({ depth: e.target.value })} />
+                                <div hidden={this.state.zInputHidden}>
+                                    <label>Enter Z</label>
+                                    <input type="number" className="form-control" onClick={(e) => this.setState({ zValue: e.target.value })} />
+                                </div>
                             </div>
                         </div>
                     </div>
