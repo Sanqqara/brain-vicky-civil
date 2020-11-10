@@ -266,7 +266,7 @@ export class Home extends Component {
                                     <label>Enter Z</label>
                                     <input type="number" className="form-control" onClick={(e) => this.setState({ zValue: e.target.value })} />
                                 </div>
-                                <div className="row mx-auto">
+                                <div className="row justify-content-center my-3">
                                     <div className="col-6">
                                         <button className="btn btn-success" onClick={this.calculateMain}>
                                             Calculate
@@ -274,10 +274,9 @@ export class Home extends Component {
                                     </div>
                                 </div>
 
-                                <div className="card row">
+                                <div className="card row mx-auto my-3">
                                     <p>Optimum depth: {this.state.optimumDepth}</p>
                                     <p>Difference: {this.state.difference}</p>
-                                    <p>{ }</p>
                                 </div>
                             </div>
                         </div>
