@@ -5,6 +5,10 @@ const app = express()
 
 app.use(bodyParser.json())
 
+app.get("/", (req, res)=> {
+    res.json("Response...")
+})
+
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('./client/build'));
 
