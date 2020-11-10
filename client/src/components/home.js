@@ -19,14 +19,16 @@ export class Home extends Component {
             h2: 0,
             slope: 0,
             zValue: 0,
-            zInputHidden: true,
             section: "",
             AValue: 0,
             breadth: 0,
             depth: 0,
             qValue: 1,
             difference: 0,
-            optimumDepth: 0
+            optimumDepth: 0,
+            rectangularHidden: true,
+            trapezoidalHidden: true,
+            circularHidden: true
         }
     }
 
@@ -129,10 +131,23 @@ export class Home extends Component {
 
     sectionSelect = (e) => {
         this.setState({ section: e.value })
-        if (e.value === "Trapezoidal") {
-            this.setState({ zInputHidden: false })
-        } else {
-            this.setState({ zInputHidden: true })
+        // if (e.value === "Trapezoidal") {
+        //     this.setState({ zInputHidden: false })
+        // } else {
+        //     this.setState({ zInputHidden: true })
+        // }
+        if (e.value == "Rectangular") {
+            this.setState({ rectangularHidden: false })
+            this.setState({trapezoidalHidden: true})
+            this.setState({circularHidden: true})
+        }else if(e.value == "Trapezoidal"){
+            this.setState({trapezoidalHidden: false})
+            this.setState({rectangularHidden: true})
+            this.setState({circularHidden: true})
+        }else if(e.value == "Circular"){
+            this.setState({circularHidden: false})
+            this.setState({trapezoidalHidden: true})
+            this.setState({rectangularHidden: true})
         }
     }
 
@@ -234,6 +249,90 @@ export class Home extends Component {
                                 <p>Manning Value: {this.state.manningValue}</p>
                             </div>
                         </div>
+                        <hr style={{ backgroundColor: "red" }} />
+
+                        {/* Rectangular Section */}
+
+                        <div className="row" hidden={this.state.rectangularHidden}>
+                            <div className="col-6">
+                                <label>Enter Breadth</label>
+                                <input type="number" className="form-control" onChange={(e) => this.setState({ breadth: (Number(e.target.value)) })} />
+                                <label>Enter Depth</label>
+                                <input type="number" className="form-control" onChange={(e) => this.setState({ depth: (Number(e.target.value)) })} />
+                                {/* <div>
+                                    <label>Enter Z</label>
+                                    <input type="number" className="form-control" onClick={(e) => this.setState({ zValue: e.target.value })} />
+                                </div> */}
+                                <div className="row justify-content-center my-3">
+                                    <div className="col-6">
+                                        <button className="btn btn-success" onClick={this.calculateMain}>
+                                            Calculate
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="card row mx-auto my-3">
+                                    <p>Optimum depth: {this.state.optimumDepth}</p>
+                                    <p>Difference: {this.state.difference}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Trapezoidal Section */}
+
+                        <div className="row" hidden={this.state.trapezoidalHidden}>
+                            <div className="col-6">
+                                <label>Enter Breadth</label>
+                                <input type="number" className="form-control" onChange={(e) => this.setState({ breadth: (Number(e.target.value)) })} />
+                                <label>Enter Depth</label>
+                                <input type="number" className="form-control" onChange={(e) => this.setState({ depth: (Number(e.target.value)) })} />
+                                <div>
+                                    <label>Enter Z</label>
+                                    <input type="number" className="form-control" onClick={(e) => this.setState({ zValue: e.target.value })} />
+                                </div>
+                                <div className="row justify-content-center my-3">
+                                    <div className="col-6">
+                                        <button className="btn btn-success" onClick={this.calculateMain}>
+                                            Calculate
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="card row mx-auto my-3">
+                                    <p>Optimum depth: {this.state.optimumDepth}</p>
+                                    <p>Difference: {this.state.difference}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Circular Section */}
+
+                        <div className="row" hidden={this.state.circularHidden}>
+                            <div className="col-6">
+                                <label>Enter Breadth</label>
+                                <input type="number" className="form-control" onChange={(e) => this.setState({ breadth: (Number(e.target.value)) })} />
+                                <label>Enter Depth</label>
+                                <input type="number" className="form-control" onChange={(e) => this.setState({ depth: (Number(e.target.value)) })} />
+                                <div>
+                                    <label>Enter Z</label>
+                                    <input type="number" className="form-control" onClick={(e) => this.setState({ zValue: e.target.value })} />
+                                </div>
+                                <div className="row justify-content-center my-3">
+                                    <div className="col-6">
+                                        <button className="btn btn-success" onClick={this.calculateMain}>
+                                            Calculate
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="card row mx-auto my-3">
+                                    <p>Optimum depth: {this.state.optimumDepth}</p>
+                                    <p>Difference: {this.state.difference}</p>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
                     <div className="col-4 my-3 card mx-1">
                         <h5>Parameters</h5>
@@ -255,31 +354,7 @@ export class Home extends Component {
                         <div className="row mx-auto">
                             <p>Slope as a percentage: {this.state.slope}</p>
                         </div>
-                        <hr style={{ color: "red" }} />
-                        <div className="row">
-                            <div className="col-6">
-                                <label>Enter Breadth</label>
-                                <input type="number" className="form-control" onChange={(e) => this.setState({ breadth: (Number(e.target.value)) })} />
-                                <label>Enter Depth</label>
-                                <input type="number" className="form-control" onChange={(e) => this.setState({ depth: (Number(e.target.value)) })} />
-                                <div hidden={this.state.zInputHidden}>
-                                    <label>Enter Z</label>
-                                    <input type="number" className="form-control" onClick={(e) => this.setState({ zValue: e.target.value })} />
-                                </div>
-                                <div className="row justify-content-center my-3">
-                                    <div className="col-6">
-                                        <button className="btn btn-success" onClick={this.calculateMain}>
-                                            Calculate
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div className="card row mx-auto my-3">
-                                    <p>Optimum depth: {this.state.optimumDepth}</p>
-                                    <p>Difference: {this.state.difference}</p>
-                                </div>
-                            </div>
-                        </div>
+                        <hr style={{ backgroundColor: "red" }} />
                     </div>
                 </div>
             </div>
