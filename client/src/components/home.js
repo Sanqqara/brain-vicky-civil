@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
+import readXlsxFile from "read-excel-file";
 
 export class Home extends Component {
     constructor(props) {
@@ -121,9 +122,35 @@ export class Home extends Component {
 
     calcuateQ = () => {
         let rainValues = [...this.state.rainfallValues]
-        rainValues = rainValues.sort()
+        rainValues = rainValues.sort().reverse()
         console.log(rainValues)
+        let xyArray = []
+        let order = 1
+        for (let i = 0; i < rainValues.length; i++) {
+            // console.log(rainValues[i])
+            xyArray[i] = { [order]: rainValues[i] }
+            order++
+        }
+        console.log(xyArray)
     }
+
+    showFile = (e) => {
+        e.preventDefault()
+        // const reader = new FileReader()
+        // reader.onload = (e) => {
+        //     const data = (e.target.result)
+        //     var workbook = XLSX.read(data, {
+        //         type: "binary"
+        //     })
+        // }
+        // reader.readAsText(e.target.files[0])
+        let x;
+        readXlsxFile(e.target.files[0]).then(
+            file => this.setState({ file: file })
+        )
+        console.log(this.state.file)
+    }
+
 
     calculateSlope = () => {
         let slope = (Number(this.state.h1) - Number(this.state.h2)) / Number(this.state.distance)
@@ -266,11 +293,19 @@ export class Home extends Component {
                                 <button className="btn btn-success form-control my-3" onClick={this.onRainSubmit}>Submit</button>
                             </div>
                         </div>
+
+                        <div className="row">
+                            <div className="col-6">
+                                <input className="input" type="file" onChange={(e) => this.showFile(e)} />
+                            </div>
+                        </div>
+                        
                         <div className="row col-6 mx-auto">
                             {/* <div className="col"> */}
                             <button className="btn btn-success form-control my-3" onClick={this.calcuateQ}>Calculate</button>
                             {/* </div> */}
                         </div>
+                        
                     </div>
                 </div>
 
