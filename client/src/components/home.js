@@ -23,12 +23,13 @@ export class Home extends Component {
             AValue: 0,
             breadth: 0,
             depth: 0,
-            qValue: 1,
+            qValue: 1.6705794,
             difference: 0,
             optimumDepth: 0,
             rectangularHidden: true,
             trapezoidalHidden: true,
-            circularHidden: true
+            circularHidden: true,
+            nValue: 0
         }
     }
 
@@ -138,16 +139,16 @@ export class Home extends Component {
         // }
         if (e.value == "Rectangular") {
             this.setState({ rectangularHidden: false })
-            this.setState({trapezoidalHidden: true})
-            this.setState({circularHidden: true})
-        }else if(e.value == "Trapezoidal"){
-            this.setState({trapezoidalHidden: false})
-            this.setState({rectangularHidden: true})
-            this.setState({circularHidden: true})
-        }else if(e.value == "Circular"){
-            this.setState({circularHidden: false})
-            this.setState({trapezoidalHidden: true})
-            this.setState({rectangularHidden: true})
+            this.setState({ trapezoidalHidden: true })
+            this.setState({ circularHidden: true })
+        } else if (e.value == "Trapezoidal") {
+            this.setState({ trapezoidalHidden: false })
+            this.setState({ rectangularHidden: true })
+            this.setState({ circularHidden: true })
+        } else if (e.value == "Circular") {
+            this.setState({ circularHidden: false })
+            this.setState({ trapezoidalHidden: true })
+            this.setState({ rectangularHidden: true })
         }
     }
 
@@ -191,6 +192,52 @@ export class Home extends Component {
                 }
             }
             // console.log(differenceArray)
+        } else if (this.state.section === "Trapezoidal") {
+            let numberOfLoops = 100000
+            let breadth = this.state.breadth
+            let depth = this.state.depth
+            let zValue = this.state.zValue
+            let slope = this.state.slope
+
+            while (numberOfLoops > 0) {
+                let area = breadth * depth + (zValue * depth * depth)
+                let oneZSquared = 1 + Math.pow(zValue, 2)
+
+
+                let perimeter = breadth + (2 * depth * Math.pow(oneZSquared, 0.5))
+                let rValue = area / perimeter
+                // let radius = area / perimeter
+                let rPower = Math.pow(rValue, (2 / 3))
+                let arPower = area * rPower
+
+                let n = this.state.manningValue
+                let q = this.state.qValue
+
+                console.log("Ar Power: ", arPower)
+                console.log("Q: ", q)
+                console.log("n: ", n)
+                let qns = (n * q) / Math.pow(slope, 0.5)
+                console.log("QNS: ", qns)
+
+                // // let n = this.state.manningValue
+                // let qns = q * n / (Math.pow(slope, 0.5))
+
+                let difference = qns - arPower
+                // differenceArray.push(difference)
+
+                // depthArray.push(depth)
+                // qnsArray.push(qns)
+                // console.log(qns)
+                numberOfLoops = numberOfLoops - 1
+                depth = depth + 0.0005
+                if (difference <= 0) {
+                    this.setState({ difference })
+                    this.setState({ optimumDepth: depth })
+                    // console.log(difference, depth)
+                    // return (difference, depth)
+                    break
+                }
+            }
         }
     }
 
@@ -288,7 +335,7 @@ export class Home extends Component {
                                 <input type="number" className="form-control" onChange={(e) => this.setState({ depth: (Number(e.target.value)) })} />
                                 <div>
                                     <label>Enter Z</label>
-                                    <input type="number" className="form-control" onClick={(e) => this.setState({ zValue: e.target.value })} />
+                                    <input type="number" className="form-control" onChange={(e) => this.setState({ zValue: Number(e.target.value) })} />
                                 </div>
                                 <div className="row justify-content-center my-3">
                                     <div className="col-6">
