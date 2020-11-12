@@ -24,13 +24,14 @@ export class Home extends Component {
             AValue: 0,
             breadth: 0,
             depth: 0,
-            qValue: 1.6705794,
+            qValue: 4,
             difference: 0,
             optimumDepth: 0,
             rectangularHidden: true,
             trapezoidalHidden: true,
             circularHidden: true,
-            nValue: 0
+            nValue: 0,
+            theta: 0
         }
     }
 
@@ -208,8 +209,6 @@ export class Home extends Component {
                 // depthArray.push(depth)
                 // qnsArray.push(qns)
                 // console.log(qns)
-                numberOfLoops = numberOfLoops - 1
-                depth = depth + 0.0005
                 if (difference <= 0) {
                     this.setState({ difference })
                     this.setState({ optimumDepth: depth })
@@ -217,6 +216,8 @@ export class Home extends Component {
                     return (difference, depth)
                     break
                 }
+                numberOfLoops = numberOfLoops - 1
+                depth = depth + 0.0005
             }
             // console.log(differenceArray)
         } else if (this.state.section === "Trapezoidal") {
@@ -255,8 +256,6 @@ export class Home extends Component {
                 // depthArray.push(depth)
                 // qnsArray.push(qns)
                 // console.log(qns)
-                numberOfLoops = numberOfLoops - 1
-                depth = depth + 0.0005
                 if (difference <= 0) {
                     this.setState({ difference })
                     this.setState({ optimumDepth: depth })
@@ -264,6 +263,43 @@ export class Home extends Component {
                     // return (difference, depth)
                     break
                 }
+                numberOfLoops = numberOfLoops - 1
+                depth = depth + 0.0005
+            }
+        } else if (this.state.section === "Circular") {
+            let numberOfLoops = 10000
+            let depth = this.state.depth
+            let slope = this.state.slope
+            let theta = this.state.theta
+            let n = this.state.manningValue
+            let q = this.state.qValue
+
+            while (numberOfLoops > 0) {
+                let area = 0.125 * (theta - Math.sin(theta)) * depth * depth
+                let p = (depth * theta) / 2
+                let r = area / p
+                // console.log(r)
+                // console.log(p)
+                let rPower = Math.pow(r, (2 / 3))
+                let arPower = area * rPower
+                let qns = (q * n) / Math.pow(slope, 0.5)
+                // console.log(rPower)
+                // console.log(arPower)
+                console.log(qns)
+
+                let difference = qns - arPower
+
+                if (difference <= 0) {
+                    this.setState({ difference })
+                    this.setState({ optimumDepth: depth })
+                    // console.log(depth)
+                    // console.log(10000 - numberOfLoops)
+                    // break
+                }
+
+                depth = depth + 0.0005
+                theta = theta + 0.5
+                numberOfLoops = numberOfLoops - 1
             }
         }
     }
@@ -299,13 +335,13 @@ export class Home extends Component {
                                 <input className="input" type="file" onChange={(e) => this.showFile(e)} />
                             </div>
                         </div>
-                        
+
                         <div className="row col-6 mx-auto">
                             {/* <div className="col"> */}
                             <button className="btn btn-success form-control my-3" onClick={this.calcuateQ}>Calculate</button>
                             {/* </div> */}
                         </div>
-                        
+
                     </div>
                 </div>
 
@@ -391,13 +427,11 @@ export class Home extends Component {
 
                         <div className="row" hidden={this.state.circularHidden}>
                             <div className="col-6">
-                                <label>Enter Breadth</label>
-                                <input type="number" className="form-control" onChange={(e) => this.setState({ breadth: (Number(e.target.value)) })} />
                                 <label>Enter Depth</label>
                                 <input type="number" className="form-control" onChange={(e) => this.setState({ depth: (Number(e.target.value)) })} />
                                 <div>
-                                    <label>Enter Z</label>
-                                    <input type="number" className="form-control" onClick={(e) => this.setState({ zValue: e.target.value })} />
+                                    <label>Enter Angle</label>
+                                    <input type="number" className="form-control" onChange={(e) => this.setState({ theta: e.target.value })} />
                                 </div>
                                 <div className="row justify-content-center my-3">
                                     <div className="col-6">
