@@ -39,9 +39,6 @@ export class Home extends Component {
 
     componentDidMount() {
 
-        axios.get("/")
-            .then(response => this.setState({message: response}))
-
         const manning_values = [
             { "Asbestos cement": 0.011 },
             { "Asphalt": 0.016 },
@@ -125,6 +122,12 @@ export class Home extends Component {
         // let rainfallValues = [...this.state.rainfallValues]
         // rainfallValues.push(e.target.value)
         // this.setState({rainfallValues: rainfallValues})
+    }
+
+    test = () => {
+        axios.get("/api/test")
+            // .then(response => this.setState({ message: response }))
+            .then(response => console.log(response))
     }
 
     calcuateQ = () => {
@@ -347,6 +350,8 @@ export class Home extends Component {
                             <button className="btn btn-success form-control my-3" onClick={this.calcuateQ}>Calculate</button>
                             {/* </div> */}
                         </div>
+
+                        <button onClick={this.test}>Test</button>
 
                     </div>
                 </div>

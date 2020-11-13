@@ -1,0 +1,2 @@
+FLASK_APP=GenerateQService.py
+FLASK_ENV=development
