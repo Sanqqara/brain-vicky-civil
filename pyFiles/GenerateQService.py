@@ -8,9 +8,10 @@ def printFF():
     return("HEllo world")
 
 
-@app.route("/api/test", methods=["GET"])
+@app.route("/api/test", methods=["POST"])
 def getTest():
-    return "Get Test Coming through"
+    req_data = request.get_json()
+    return req_data["Timothy"]
 
 if __name__ == "__main__":
     app.run(debug=True)

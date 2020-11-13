@@ -125,9 +125,15 @@ export class Home extends Component {
     }
 
     test = () => {
-        axios.get("/api/test")
+        axios.post("/api/test", { "test": "Hello World", "Timothy": "Sankara" })
             // .then(response => this.setState({ message: response }))
-            .then(response => console.log(response))
+            .then(response => console.log(response.data))
+    }
+
+    test2 = () => {
+        this.state.rainfallData.map((data) => {
+            console.log(data)
+        })
     }
 
     calcuateQ = () => {
@@ -351,8 +357,40 @@ export class Home extends Component {
                             {/* </div> */}
                         </div>
 
-                        <button onClick={this.test}>Test</button>
+                        {/* <button onClick={this.test}>Test</button>
+                        <button onClick={this.test2}>Test2</button> */}
 
+                    </div>
+                    <div className="col-5 m-2 card">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <td>Year</td>
+                                    <td>Rainfall</td>
+                                    <td>Delete Entry</td>
+                                </tr>
+                            </thead>
+                            {this.state.rainfallData.map((data, index) => (
+                                <tbody key={index}>
+                                    <tr>
+                                        <td>{Object.keys(data)}</td>
+                                        <td>{Object.values(data)}</td>
+                                        <td>
+                                            <button className="btn btn-danger"
+                                                onClick={(e) => {
+                                                    this.setState({
+                                                        rainfallData: this.state.rainfallData.filter(function (rainData) {
+                                                            return rainData !== data
+                                                        })
+                                                    })
+                                                }}
+                                            >&#xd7;
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            ))}
+                        </table>
                     </div>
                 </div>
 
