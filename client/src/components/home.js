@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
 import readXlsxFile from "read-excel-file";
+import axios from "axios"
 
 export class Home extends Component {
     constructor(props) {
@@ -31,11 +32,16 @@ export class Home extends Component {
             trapezoidalHidden: true,
             circularHidden: true,
             nValue: 0,
-            theta: 0
+            theta: 0,
+            message: ""
         }
     }
 
     componentDidMount() {
+
+        axios.get("/")
+            .then(response => this.setState({message: response}))
+
         const manning_values = [
             { "Asbestos cement": 0.011 },
             { "Asphalt": 0.016 },
