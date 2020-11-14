@@ -14,6 +14,7 @@ year_number = int(
 # print(sheetName) # test step
 
 data = pd.read_excel(sheetName)
+# print(data)
 
 data2 = data.copy()
 data2['Order(m)'] = 0
@@ -60,7 +61,7 @@ intercept = linear_regressor.intercept_
 
 q_value = slope * ln(year_number) + intercept
 
-# print("The Q value is: ", q_value[0][0]) # test step
+print("The Q value is: ", q_value[0][0]) # test step
 
 # # ----------------------GENERATE AR VALUE----------------------
 

@@ -25,7 +25,7 @@ export class Home extends Component {
             AValue: 0,
             breadth: 0,
             depth: 0,
-            qValue: 4,
+            qValue: 0,
             difference: 0,
             optimumDepth: 0,
             rectangularHidden: true,
@@ -33,7 +33,10 @@ export class Home extends Component {
             circularHidden: true,
             nValue: 0,
             theta: 0,
-            message: ""
+            message: "",
+            q_slope: 0,
+            q_intercept: 0
+
         }
     }
 
@@ -130,25 +133,45 @@ export class Home extends Component {
             .then(response => console.log(response.data))
     }
 
-    test2 = () => {
-        this.state.rainfallData.map((data) => {
-            console.log(data)
-        })
-    }
-
     calcuateQ = () => {
-        let rainValues = [...this.state.rainfallValues]
-        rainValues = rainValues.sort().reverse()
-        console.log(rainValues)
+        let data = []
+        let rainvalues = []
+        let col_titles = this.state.file[0].slice(0, 2)
+        this.state.file.slice(1, this.state.file.length).map((array, index) => (
+            rainvalues.push(array[1])
+        ))
+        rainvalues = rainvalues.sort().reverse()
+        // console.log(rainvalues)
         let xyArray = []
         let order = 1
-        for (let i = 0; i < rainValues.length; i++) {
+        for (let i = 0; i < rainvalues.length; i++) {
             // console.log(rainValues[i])
-            xyArray[i] = { [order]: rainValues[i] }
+            xyArray[i] = { [order]: rainvalues[i] }
             order++
         }
-        console.log(xyArray)
+        // console.log(xyArray)
+        axios.post("/api/test", { data: xyArray })
+            .then(response => (
+                // console.log(response)
+                this.setState({ q_slope: [response.data.slope[0][0]] }),
+                this.setState({ q_intercept: [response.data.intercept[0]] }),
+                this.setState({ qValue: [response.data.q_value[0][0]] })
+            ))
     }
+
+    // calcuateQ = () => {
+    //     let rainValues = [...this.state.rainfallValues]
+    //     rainValues = rainValues.sort().reverse()
+    //     console.log(rainValues)
+    //     let xyArray = []
+    //     let order = 1
+    //     for (let i = 0; i < rainValues.length; i++) {
+    //         // console.log(rainValues[i])
+    //         xyArray[i] = { [order]: rainValues[i] }
+    //         order++
+    //     }
+    //     console.log(xyArray)
+    // }
 
     showFile = (e) => {
         e.preventDefault()
@@ -357,8 +380,8 @@ export class Home extends Component {
                             {/* </div> */}
                         </div>
 
-                        {/* <button onClick={this.test}>Test</button>
-                        <button onClick={this.test2}>Test2</button> */}
+                        {/* <button onClick={this.test}>Test</button> */}
+                        {/* <button className="btn btn-success my-3" onClick={this.test2}>Test2</button> */}
 
                     </div>
                     <div className="col-5 m-2 card">
