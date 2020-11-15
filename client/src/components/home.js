@@ -35,8 +35,9 @@ export class Home extends Component {
             theta: 0,
             message: "",
             q_slope: 0,
-            q_intercept: 0
-
+            q_intercept: 0,
+            yearRainArray: [],
+            returnPeriod: 0
         }
     }
 
@@ -136,10 +137,14 @@ export class Home extends Component {
     calcuateQ = () => {
         let data = []
         let rainvalues = []
+        let yearValues = []
         let col_titles = this.state.file[0].slice(0, 2)
         this.state.file.slice(1, this.state.file.length).map((array, index) => (
-            rainvalues.push(array[1])
+            rainvalues.push(array[1]),
+            yearValues.push(array[0])
         ))
+        this.setState({ rainvalues: rainvalues })
+        console.log(rainvalues)
         rainvalues = rainvalues.sort().reverse()
         // console.log(rainvalues)
         let xyArray = []
@@ -184,10 +189,21 @@ export class Home extends Component {
         // }
         // reader.readAsText(e.target.files[0])
         let x;
+        let rainvalues = []
+        let yearRainArray = []
         readXlsxFile(e.target.files[0]).then(
-            file => this.setState({ file: file })
+            file => (
+                this.setState({ file: file }),
+                file.slice(1, this.state.file.length).map((array, index) => (
+                    // rainvalues.push(array[1]),
+                    // yearValues.push(array[0])
+                    yearRainArray.push([array[0], array[1]])
+                )),
+                // this.setState({rainvalues: rainvalues}),
+                // this.setState({yearValues: yearValues})
+                this.setState({ yearRainArray })
+            )
         )
-        console.log(this.state.file)
     }
 
 
@@ -354,7 +370,7 @@ export class Home extends Component {
                 <div className="row my-5">
                     <div className="col-6 mx-auto card">
                         <h5 className="display-5">Enter Rainfall Data</h5>
-                        <div className="row mt-2">
+                        {/* <div className="row mt-2">
                             <div className="col-6">
                                 <label>Year</label>
                                 <input className="form-control" type="number" value={this.state.yearBlank} onChange={this.onYearSubmit} />
@@ -366,11 +382,15 @@ export class Home extends Component {
                             <div className="col-8 mx-auto">
                                 <button className="btn btn-success form-control my-3" onClick={this.onRainSubmit}>Submit</button>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-6 mt-4">
                                 <input className="input" type="file" onChange={(e) => this.showFile(e)} />
+                            </div>
+                            <div className="col-6">
+                                <label>Enter Return Period</label>
+                                <input className="form-control" type="number" onChange={(e) => this.setState({ returnPeriod: e.target.value })} />
                             </div>
                         </div>
 
@@ -382,9 +402,11 @@ export class Home extends Component {
 
                         {/* <button onClick={this.test}>Test</button> */}
                         {/* <button className="btn btn-success my-3" onClick={this.test2}>Test2</button> */}
-
+                        <p>Q Value: {this.state.qValue}</p>
                     </div>
-                    <div className="col-5 m-2 card">
+                </div>
+                <div className="row">
+                    <div className="col-10 mx-auto card">
                         <table className="table">
                             <thead>
                                 <tr>
@@ -393,16 +415,17 @@ export class Home extends Component {
                                     <td>Delete Entry</td>
                                 </tr>
                             </thead>
-                            {this.state.rainfallData.map((data, index) => (
+                            {this.state.yearRainArray.map((data, index) => (
                                 <tbody key={index}>
                                     <tr>
-                                        <td>{Object.keys(data)}</td>
-                                        <td>{Object.values(data)}</td>
+                                        <td>{data[0]}</td>
+                                        <td>{data[1]}</td>
+
                                         <td>
                                             <button className="btn btn-danger"
                                                 onClick={(e) => {
                                                     this.setState({
-                                                        rainfallData: this.state.rainfallData.filter(function (rainData) {
+                                                        yearRainArray: this.state.yearRainArray.filter(function (rainData) {
                                                             return rainData !== data
                                                         })
                                                     })
@@ -417,21 +440,16 @@ export class Home extends Component {
                     </div>
                 </div>
 
+
                 <div className="row my-5">
                     <div className="col-7 mx-auto card">
                         <h5>Sections</h5>
-                        <div className="row mt-2">
-                            <div className="col-4 my-3">
-                                <label>Enter Return Period</label>
-                                <input className="form-control" type="text" />
-                            </div>
-                            <div className="col-4 my-3">
+                        <div className="row">
+                            <div className="col-6 my-3">
                                 <label>Select a section</label>
                                 <Select options={options} onChange={this.sectionSelect.bind(this)} />
                             </div>
-                        </div>
-                        <div className="row my-4">
-                            <div className="col-4">
+                            <div className="col-6 my-3">
                                 <label>Select the Manning Value</label>
                                 <Select options={this.state.manningOptions} onChange={(e) => this.setState({ manningValue: e.value })} />
                             </div>
@@ -439,6 +457,7 @@ export class Home extends Component {
                                 <p>Manning Value: {this.state.manningValue}</p>
                             </div>
                         </div>
+
                         <hr style={{ backgroundColor: "red" }} />
 
                         {/* Rectangular Section */}
