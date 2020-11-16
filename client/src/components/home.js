@@ -25,7 +25,7 @@ export class Home extends Component {
             AValue: 0,
             breadth: 0,
             depth: 0,
-            qValue: 0,
+            qValue: 4,
             difference: 0,
             optimumDepth: 0,
             rectangularHidden: true,
@@ -330,29 +330,37 @@ export class Home extends Component {
 
             while (numberOfLoops > 0) {
                 let area = 0.125 * (theta - Math.sin(theta)) * depth * depth
+                console.log("Area: ", area)
                 let p = (depth * theta) / 2
+                console.log("P: ", p)
                 let r = area / p
+                console.log("R: ", r)
                 // console.log(r)
                 // console.log(p)
                 let rPower = Math.pow(r, (2 / 3))
+                console.log("Rpower: ", rPower)
                 let arPower = area * rPower
+                console.log("ARpower: ", arPower)
                 let qns = (q * n) / Math.pow(slope, 0.5)
+                console.log("QNS: ", qns)
                 // console.log(rPower)
                 // console.log(arPower)
                 console.log(qns)
 
                 let difference = qns - arPower
+                console.log("Difference: ", difference)
 
                 if (difference <= 0) {
                     this.setState({ difference })
                     this.setState({ optimumDepth: depth })
                     // console.log(depth)
                     // console.log(10000 - numberOfLoops)
-                    // break
+                    break
                 }
 
                 depth = depth + 0.0005
-                theta = theta + 0.5
+                console.log("Depth: ", depth)
+                // theta = theta + 0.5
                 numberOfLoops = numberOfLoops - 1
             }
         }
