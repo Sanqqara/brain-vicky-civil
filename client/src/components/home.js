@@ -28,7 +28,7 @@ export class Home extends Component {
             AValue: 0,
             breadth: 0,
             depth: 0,
-            qValue: 4,
+            qValue: 0,
             difference: 0,
             optimumDepth: 0,
             rectangularHidden: true,
@@ -40,7 +40,10 @@ export class Home extends Component {
             q_slope: 0,
             q_intercept: 0,
             yearRainArray: [],
-            returnPeriod: 0
+            returnPeriod: 0,
+            areaInKm: 0,
+            terrainValue: 0,
+            rainfallHours: 0
         }
     }
 
@@ -141,20 +144,39 @@ export class Home extends Component {
         let data = []
         let rainvalues = []
         let yearValues = []
+        let convertedArray = []
         let col_titles = this.state.file[0].slice(0, 2)
         this.state.file.slice(1, this.state.file.length).map((array, index) => (
             rainvalues.push(array[1]),
             yearValues.push(array[0])
         ))
         this.setState({ rainvalues: rainvalues })
+        // for (let i = 0; i < rainValues.length; i++) {
+        //     let q = 0
+        //     let rate = ((rainValues / 10) / this.state.rainfallHours)
+        //     let converted = this.state.terrainValue * rate * this.state.areaInKm
+        //     console.log(converted)
+        // }
         console.log(rainvalues)
         rainvalues = rainvalues.sort().reverse()
+        rainvalues.forEach((value => {
+            let q = 0
+            let rate = ((value / 10) / this.state.rainfallHours)
+            let converted = this.state.terrainValue * rate * this.state.areaInKm
+            // console.log(converted)
+            convertedArray.push(converted)
+        }))
         // console.log(rainvalues)
         let xyArray = []
         let order = 1
+        // for (let i = 0; i < rainvalues.length; i++) {
+        //     // console.log(rainValues[i])
+        //     xyArray[i] = { [order]: rainvalues[i] }
+        //     order++
+        // }
         for (let i = 0; i < rainvalues.length; i++) {
             // console.log(rainValues[i])
-            xyArray[i] = { [order]: rainvalues[i] }
+            xyArray[i] = { [order]: convertedArray[i] }
             order++
         }
         // console.log(xyArray)
@@ -376,10 +398,19 @@ export class Home extends Component {
             { value: "Circular", label: "Circular" }
         ]
 
+        const terrainOptions = [
+            { label: "Flat Residental areas", value: 0.4 },
+            { label: "Moderately steep residential areas", value: 0.6 },
+            { label: "Built up areas-impervious", value: 0.8 },
+            { label: "Rolling lands and clay loam soils", value: 0.5 },
+            { label: "Hilly areas, forests, clay and loamy soils", value: 0.5 },
+            { label: "Flat cultivated lands and sandy soils", value: 0.2 }
+        ]
+
         return (
             <div className="container-fluid">
                 <div className="row my-5">
-                    <div className="col-6 mx-auto card">
+                    <div className="col-10 mx-auto card">
                         <h5 className="display-5">Enter Rainfall Data</h5>
                         {/* <div className="row mt-2">
                             <div className="col-6">
@@ -402,6 +433,29 @@ export class Home extends Component {
                             <div className="col-6">
                                 <label>Enter Return Period</label>
                                 <input className="form-control" type="number" onChange={(e) => this.setState({ returnPeriod: e.target.value })} />
+                            </div>
+                        </div>
+                        <div className="row mt-3">
+                            <div className="col-6">
+                                <label>Terrain Value</label>
+                                <Select
+                                    options={
+                                        terrainOptions
+                                    }
+                                    onChange={(e) => this.setState({ terrainValue: e.value })}
+                                />
+                                <p>{this.state.terrainValue}</p>
+                            </div>
+                            <div className="col-6">
+                                <label>Enter Area in Kilometers<sup>2</sup></label>
+                                <input className="form-control" type="number" onChange={(e) => this.setState({ areaInKm: e.target.value })} />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-6">
+                                <label>Number of Rainfall Hours</label>
+                                <input className="form-control" type="number" onChange={(e) => this.setState({ rainfallHours: e.target.value })} />
+                                <p>{this.state.rainfallHours}</p>
                             </div>
                         </div>
 
