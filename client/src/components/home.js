@@ -155,7 +155,7 @@ export class Home extends Component {
             order++
         }
         // console.log(xyArray)
-        axios.post("/api/test", { data: xyArray })
+        axios.post("/api/test", { data: xyArray, returnPeriod: this.state.returnPeriod })
             .then(response => (
                 // console.log(response)
                 this.setState({ q_slope: [response.data.slope[0][0]] }),
