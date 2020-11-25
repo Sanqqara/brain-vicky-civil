@@ -54,13 +54,14 @@ ln(ln(data4['Return period']/(data4['Return period']-1)))
     linear_regressor = LinearRegression()
     X = data_df['x'].values.reshape(-1, 1)
     Y = data_df['y'].values.reshape(-1, 1)
-
+    returnPeriod = req_data["returnPeriod"]
+    print("Return Period: ", returnPeriod)
     linear_regressor.fit(X, Y)
     slope = linear_regressor.coef_ * 100
     intercept = linear_regressor.intercept_
-    q_value = slope * ln(40) + intercept
+    q_value = slope * ln((int(req_data["returnPeriod"]))) + intercept
     print("The Q value is: ", q_value[0][0]) # test step
-
+    print("Data here...", type(int(req_data["returnPeriod"])))
     
     # print(data4)
     # q_value = q_value.tolist()

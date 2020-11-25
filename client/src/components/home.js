@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import Select from 'react-select'
 import readXlsxFile from "read-excel-file";
 import axios from "axios"
+import trap from "./trap.jpg"
+import rectangular from "./rectangular.png"
+import circular from "./circular.png";
 
 export class Home extends Component {
     constructor(props) {
@@ -155,7 +158,7 @@ export class Home extends Component {
             order++
         }
         // console.log(xyArray)
-        axios.post("/api/test", { data: xyArray })
+        axios.post("/api/test", { data: xyArray, returnPeriod: this.state.returnPeriod })
             .then(response => (
                 // console.log(response)
                 this.setState({ q_slope: [response.data.slope[0][0]] }),
@@ -493,6 +496,10 @@ export class Home extends Component {
                                     <p>Difference: {this.state.difference}</p>
                                 </div>
                             </div>
+                            <div className="col-6">
+                                <p>Rectangular Section</p>
+                                <img alt="Trapezoidal section image..." src={rectangular} style={{ width: "100%", height: "50%" }} />
+                            </div>
                         </div>
 
                         {/* Trapezoidal Section */}
@@ -520,6 +527,10 @@ export class Home extends Component {
                                     <p>Difference: {this.state.difference}</p>
                                 </div>
                             </div>
+                            <div className="col-6">
+                                <p>Trapezoidal Section</p>
+                                <img alt="Trapezoidal section image..." src={trap} style={{ width: "100%", height: "50%" }} />
+                            </div>
                         </div>
 
                         {/* Circular Section */}
@@ -544,6 +555,10 @@ export class Home extends Component {
                                     <p>Optimum depth: {this.state.optimumDepth}</p>
                                     <p>Difference: {this.state.difference}</p>
                                 </div>
+                            </div>
+                            <div className="col-6">
+                                <p>Circular Section</p>
+                                <img alt="Trapezoidal section image..." src={circular} style={{ width: "100%", height: "85%" }} />
                             </div>
                         </div>
 
