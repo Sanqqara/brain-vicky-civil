@@ -427,35 +427,40 @@ export class Home extends Component {
                         </div> */}
 
                         <div className="row">
-                            <div className="col-6 mt-4">
+                            <div className="col-6 mt-4 card mx-auto mb-3">
+                                <p>Required columns: YEAR, FLOOD PEAK(mm)</p>
                                 <input className="input" type="file" onChange={(e) => this.showFile(e)} />
                             </div>
-                            <div className="col-6">
+                        </div>
+                        <div className="row">
+                            <div className="col-6 mx-auto">
                                 <label>Enter Return Period</label>
                                 <input className="form-control" type="number" onChange={(e) => this.setState({ returnPeriod: e.target.value })} />
                             </div>
                         </div>
                         <div className="row mt-3">
-                            <div className="col-6">
-                                <label>Terrain Value</label>
+                            <div className="col-6 mx-auto">
+                                <label>Terrain Parameters(C)</label>
                                 <Select
                                     options={
                                         terrainOptions
                                     }
                                     onChange={(e) => this.setState({ terrainValue: e.value })}
                                 />
-                                <p>{this.state.terrainValue}</p>
+                                {/* <p>{this.state.terrainValue}</p> */}
                             </div>
-                            <div className="col-6">
+                        </div>
+                        <div className="row">
+                        <div className="col-6 mx-auto">
                                 <label>Enter Area in Kilometers<sup>2</sup></label>
                                 <input className="form-control" type="number" onChange={(e) => this.setState({ areaInKm: e.target.value })} />
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-6 mx-auto">
                                 <label>Number of Rainfall Hours</label>
                                 <input className="form-control" type="number" onChange={(e) => this.setState({ rainfallHours: e.target.value })} />
-                                <p>{this.state.rainfallHours}</p>
+                                {/* <p>{this.state.rainfallHours}</p> */}
                             </div>
                         </div>
 
@@ -464,7 +469,7 @@ export class Home extends Component {
                             <button className="btn btn-success form-control my-3" onClick={this.calcuateQ}>Calculate</button>
                             {/* </div> */}
                         </div>
-
+                        <p>Q = 2.778 * C * I * A</p>
                         {/* <button onClick={this.test}>Test</button> */}
                         {/* <button className="btn btn-success my-3" onClick={this.test2}>Test2</button> */}
                         <p>Q Value: {this.state.qValue}</p>
@@ -477,7 +482,7 @@ export class Home extends Component {
                                 <tr>
                                     <td>Year</td>
                                     <td>Rainfall</td>
-                                    <td>Delete Entry</td>
+                                    {/* <td>Delete Entry</td> */}
                                 </tr>
                             </thead>
                             {this.state.yearRainArray.map((data, index) => (
@@ -486,7 +491,7 @@ export class Home extends Component {
                                         <td>{data[0]}</td>
                                         <td>{data[1]}</td>
 
-                                        <td>
+                                        {/* <td>
                                             <button className="btn btn-danger"
                                                 onClick={(e) => {
                                                     this.setState({
@@ -497,7 +502,7 @@ export class Home extends Component {
                                                 }}
                                             >&#xd7;
                                             </button>
-                                        </td>
+                                        </td> */}
                                     </tr>
                                 </tbody>
                             ))}
