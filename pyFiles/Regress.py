@@ -14,10 +14,10 @@ def main():
     data_df = data_df[1:] #take the data less the header row
     data_df.columns = new_header
     ki_ex = data_df['x']
-    print(data_df['x'][0:5])
-    print("New Line")
+    # print(data_df['x'][0:5])
+    # print("New Line")
     data_df['x'] = data_df['x'].apply(lambda x: (np.log(x))*100) 
-    print(data_df['x'][0:5])
+    # print(data_df['x'][0:5])
 
     linear_regressor = LinearRegression()
     X=data_df['x'].values.reshape(-1,1)
@@ -26,7 +26,7 @@ def main():
 
     linear_regressor.fit(X,Y)
     Y_Pred = linear_regressor.predict(X) # the new Y values are the ones predicted from the model
-
+    print(ki_ex)
     plt.scatter(ki_ex, Y)
     plt.semilogx(ki_ex, Y_Pred, color='red')
     plt.ylabel('flood peak in descending')

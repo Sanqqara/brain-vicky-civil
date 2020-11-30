@@ -4,6 +4,8 @@ import pandas as pd
 from numpy import log as ln
 import numpy as np
 from sklearn.linear_model import LinearRegression, LogisticRegression
+import matplotlib.pyplot as plt
+from matplotlib.ticker import ScalarFormatter
 
 app = FlaskAPI(__name__)
 
@@ -64,15 +66,33 @@ ln(ln(data4['Return period']/(data4['Return period']-1)))
     print("The Q value is: ", q_value[0][0]) # test step
     print("Data here...", type(int(req_data["returnPeriod"])))
     
-    # print(data4)
     # q_value = q_value.tolist()
     q_value = np.ndarray.tolist(q_value)
     intercept = np.ndarray.tolist(intercept)
     slope = np.ndarray.tolist(slope)
 
-    # # The graph
-    # returnPeriodColumn = req_data["returnPeriodColumn"]
-    # print(returnPeriodColumn)
+    # The graph
+    fig, ax = plt.subplots(figsize=(20,10))
+
+    Y_Pred = linear_regressor.predict(X[:-1])
+    print("Y_Pred: ", Y_Pred)
+
+    returnPeriodColumn = req_data["returnPeriodColumn"]
+    # returnPeriodColumn = pd.Series(returnPeriodColumn)
+    plt.scatter(returnPeriodColumn[:-1], data_df["y"][:-1])
+    plt.semilogx(returnPeriodColumn[:-1], Y_Pred, color="red")
+    plt.semilogx(returnPeriodColumn, Y)
+    # print(len(returnPeriodColumn)) = 41
+    # print(len(Y_Pred)) = 40
+    # print(len(data_df["y"])) = 41
+    # print(returnPeriodColumn.pop())
+    # for i in returnPeriodColumn:
+    #     print("i:, ", i)
+    # plt.plot(np.unique(returnPeriodColumn), np.poly1d(np.polyfit(returnPeriodColumn, Y_Pred, 1))(np.unique(returnPeriodColumn)))
+    ax.xaxis.set_major_formatter(ScalarFormatter())
+    plt.ylabel('flood peak in descending')
+    plt.xlabel('return period')
+    plt.savefig("test44.png")
 
     return ({"q_value": q_value, "slope": slope, "intercept": intercept})
 
