@@ -6,6 +6,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression, LogisticRegression
 import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter
+import os
 
 app = FlaskAPI(__name__)
 
@@ -76,23 +77,17 @@ ln(ln(data4['Return period']/(data4['Return period']-1)))
 
     Y_Pred = linear_regressor.predict(X[:-1])
     print("Y_Pred: ", Y_Pred)
+    os.remove("../client/src/components/regres.png")
 
     returnPeriodColumn = req_data["returnPeriodColumn"]
     # returnPeriodColumn = pd.Series(returnPeriodColumn)
     plt.scatter(returnPeriodColumn[:-1], data_df["y"][:-1])
     plt.semilogx(returnPeriodColumn[:-1], Y_Pred, color="red")
     plt.semilogx(returnPeriodColumn, Y)
-    # print(len(returnPeriodColumn)) = 41
-    # print(len(Y_Pred)) = 40
-    # print(len(data_df["y"])) = 41
-    # print(returnPeriodColumn.pop())
-    # for i in returnPeriodColumn:
-    #     print("i:, ", i)
-    # plt.plot(np.unique(returnPeriodColumn), np.poly1d(np.polyfit(returnPeriodColumn, Y_Pred, 1))(np.unique(returnPeriodColumn)))
     ax.xaxis.set_major_formatter(ScalarFormatter())
-    plt.ylabel('flood peak in descending')
-    plt.xlabel('return period')
-    plt.savefig("test44.png")
+    plt.ylabel('FLOOD PEAKS')
+    plt.xlabel('RETURN PERIOD')
+    plt.savefig("../client/src/components/regres.png")
 
     return ({"q_value": q_value, "slope": slope, "intercept": intercept})
 

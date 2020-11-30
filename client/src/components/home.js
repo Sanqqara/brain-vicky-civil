@@ -5,6 +5,7 @@ import axios from "axios"
 import trap from "./trap.jpg"
 import rectangular from "./rectangular.png"
 import circular from "./circular.png";
+import regres from "./regres.png"
 
 export class Home extends Component {
     constructor(props) {
@@ -43,7 +44,8 @@ export class Home extends Component {
             returnPeriod: 0,
             areaInKm: 0,
             terrainValue: 0,
-            rainfallHours: 0
+            rainfallHours: 0,
+            regressionImageHidden: true
         }
     }
 
@@ -185,7 +187,8 @@ export class Home extends Component {
                 // console.log(response)
                 this.setState({ q_slope: [response.data.slope[0][0]] }),
                 this.setState({ q_intercept: [response.data.intercept[0]] }),
-                this.setState({ qValue: [response.data.q_value[0][0]] })
+                this.setState({ qValue: [response.data.q_value[0][0]] }),
+                this.setState({regressionImageHidden: false})
             ))
     }
 
@@ -410,7 +413,7 @@ export class Home extends Component {
         return (
             <div className="container-fluid">
                 <div className="row my-5">
-                    <div className="col-6 mx-auto card">
+                    <div className="col-6">
                         <h5 className="display-5">Enter Rainfall Data</h5>
                         {/* <div className="row mt-2">
                             <div className="col-6">
@@ -447,7 +450,7 @@ export class Home extends Component {
                                 <p>{this.state.terrainValue}</p>
                             </div>
                             <div className="col-6">
-                                <label>Enter Basin Area(gi)</label>
+                                <label>Enter Basin Area(Km<sup>2</sup>)</label>
                                 <input className="form-control" type="number" onChange={(e) => this.setState({ areaInKm: e.target.value })} />
                             </div>
                         </div>
@@ -472,6 +475,9 @@ export class Home extends Component {
                     {/* <div className="col-6">
                         <img src={regression} alt={"Chart Image..."}/>
                     </div> */}
+                <div className="col-6" hidden={this.state.regressionImageHidden}>
+                    <img src={regres} style={{width: "100%", height: "100%"}} />
+                </div>
                 </div>
                 <div className="row">
                     <div className="col-10 mx-auto card">
