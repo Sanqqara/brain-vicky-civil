@@ -157,30 +157,30 @@ export class Home extends Component {
         //     let converted = this.state.terrainValue * rate * this.state.areaInKm
         //     console.log(converted)
         // }
-        console.log(rainvalues)
         rainvalues = rainvalues.sort().reverse()
         rainvalues.forEach((value => {
             let q = 0
             let rate = ((value / 10) / this.state.rainfallHours)
-            let converted = this.state.terrainValue * rate * this.state.areaInKm
+            let converted = this.state.terrainValue * rate * this.state.areaInKm * 2.778
             // console.log(converted)
             convertedArray.push(converted)
         }))
         // console.log(rainvalues)
         let xyArray = []
         let order = 1
-        // for (let i = 0; i < rainvalues.length; i++) {
-        //     // console.log(rainValues[i])
-        //     xyArray[i] = { [order]: rainvalues[i] }
-        //     order++
-        // }
-        for (let i = 0; i < rainvalues.length; i++) {
-            // console.log(rainValues[i])
-            xyArray[i] = { [order]: convertedArray[i] }
+        let returnPeriodColumn = []
+        let numberOfColumns = rainvalues.length;
+
+        // generate the return period array and the order:rainfall peak values array
+        for (let i = 0; i <= rainvalues.length; i++) {
+            xyArray[i] = { [order]: convertedArray[i] } // x is the order, y is the rainvalue
+            let returnPeriod = (numberOfColumns+1) / order
+            returnPeriodColumn[i] = (returnPeriod)
             order++
         }
-        // console.log(xyArray)
-        axios.post("/api/test", { data: xyArray, returnPeriod: this.state.returnPeriod })
+        console.log(returnPeriodColumn)
+        console.log(convertedArray)
+        axios.post("/api/test", { data: xyArray, returnPeriod: this.state.returnPeriod, returnPeriodColumn: returnPeriodColumn })
             .then(response => (
                 // console.log(response)
                 this.setState({ q_slope: [response.data.slope[0][0]] }),
@@ -410,7 +410,7 @@ export class Home extends Component {
         return (
             <div className="container-fluid">
                 <div className="row my-5">
-                    <div className="col-10 mx-auto card">
+                    <div className="col-6 mx-auto card">
                         <h5 className="display-5">Enter Rainfall Data</h5>
                         {/* <div className="row mt-2">
                             <div className="col-6">
@@ -427,40 +427,35 @@ export class Home extends Component {
                         </div> */}
 
                         <div className="row">
-                            <div className="col-6 mt-4 card mx-auto mb-3">
-                                <p>Required columns: YEAR, FLOOD PEAK(mm)</p>
+                            <div className="col-6 mt-4">
                                 <input className="input" type="file" onChange={(e) => this.showFile(e)} />
                             </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-6 mx-auto">
-                                <label>Enter Return Period</label>
+                            <div className="col-6">
+                                <label>Enter Return Period(Years)</label>
                                 <input className="form-control" type="number" onChange={(e) => this.setState({ returnPeriod: e.target.value })} />
                             </div>
                         </div>
                         <div className="row mt-3">
-                            <div className="col-6 mx-auto">
-                                <label>Terrain Parameters(C)</label>
+                            <div className="col-6">
+                                <label>Terrain Value</label>
                                 <Select
                                     options={
                                         terrainOptions
                                     }
                                     onChange={(e) => this.setState({ terrainValue: e.value })}
                                 />
-                                {/* <p>{this.state.terrainValue}</p> */}
+                                <p>{this.state.terrainValue}</p>
                             </div>
-                        </div>
-                        <div className="row">
-                        <div className="col-6 mx-auto">
-                                <label>Enter Area in Kilometers<sup>2</sup></label>
+                            <div className="col-6">
+                                <label>Enter Basin Area(gi)</label>
                                 <input className="form-control" type="number" onChange={(e) => this.setState({ areaInKm: e.target.value })} />
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-6 mx-auto">
-                                <label>Number of Rainfall Hours</label>
+                            <div className="col-6">
+                                <label>Number of Rainfall Hours(hrs)</label>
                                 <input className="form-control" type="number" onChange={(e) => this.setState({ rainfallHours: e.target.value })} />
-                                {/* <p>{this.state.rainfallHours}</p> */}
+                                <p>{this.state.rainfallHours}</p>
                             </div>
                         </div>
 
@@ -469,11 +464,14 @@ export class Home extends Component {
                             <button className="btn btn-success form-control my-3" onClick={this.calcuateQ}>Calculate</button>
                             {/* </div> */}
                         </div>
-                        <p>Q = 2.778 * C * I * A</p>
+
                         {/* <button onClick={this.test}>Test</button> */}
                         {/* <button className="btn btn-success my-3" onClick={this.test2}>Test2</button> */}
-                        <p>Q Value: {this.state.qValue}</p>
+                        <p>Q Value: {this.state.qValue} m<sup>3</sup>/s</p>
                     </div>
+                    {/* <div className="col-6">
+                        <img src={regression} alt={"Chart Image..."}/>
+                    </div> */}
                 </div>
                 <div className="row">
                     <div className="col-10 mx-auto card">
@@ -520,7 +518,7 @@ export class Home extends Component {
                                 <Select options={options} onChange={this.sectionSelect.bind(this)} />
                             </div>
                             <div className="col-6 my-3">
-                                <label>Select the Manning Value</label>
+                                <label>Select the Manning Value(n)</label>
                                 <Select options={this.state.manningOptions} onChange={(e) => this.setState({ manningValue: e.value })} />
                             </div>
                             <div className="col-4">
@@ -534,9 +532,9 @@ export class Home extends Component {
 
                         <div className="row" hidden={this.state.rectangularHidden}>
                             <div className="col-6">
-                                <label>Enter Breadth</label>
+                                <label>Enter Breadth(m)</label>
                                 <input type="number" className="form-control" onChange={(e) => this.setState({ breadth: (Number(e.target.value)) })} />
-                                <label>Enter Depth</label>
+                                <label>Enter Depth(m)</label>
                                 <input type="number" className="form-control" onChange={(e) => this.setState({ depth: (Number(e.target.value)) })} />
                                 {/* <div>
                                     <label>Enter Z</label>
@@ -565,9 +563,9 @@ export class Home extends Component {
 
                         <div className="row" hidden={this.state.trapezoidalHidden}>
                             <div className="col-6">
-                                <label>Enter Breadth</label>
+                                <label>Enter Breadth(m)</label>
                                 <input type="number" className="form-control" onChange={(e) => this.setState({ breadth: (Number(e.target.value)) })} />
-                                <label>Enter Depth</label>
+                                <label>Enter Depth(m)</label>
                                 <input type="number" className="form-control" onChange={(e) => this.setState({ depth: (Number(e.target.value)) })} />
                                 <div>
                                     <label>Enter Z</label>
@@ -596,7 +594,7 @@ export class Home extends Component {
 
                         <div className="row" hidden={this.state.circularHidden}>
                             <div className="col-6">
-                                <label>Enter Depth</label>
+                                <label>Enter Diameter(m)</label>
                                 <input type="number" className="form-control" onChange={(e) => this.setState({ depth: (Number(e.target.value)) })} />
                                 <div>
                                     <label>Enter Angle</label>
@@ -624,7 +622,7 @@ export class Home extends Component {
 
                     </div>
                     <div className="col-4 my-3 card mx-1">
-                        <h5>Parameters</h5>
+                        <h5>Slope Calculations</h5>
                         <div className="row">
                             <div className="col-6">
                                 <label>Height One</label>
