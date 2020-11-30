@@ -18,7 +18,7 @@ def getTest():
     # data = pd.read_dict(req_data)
     # print(req_data["data"][0])
     # print(pd.DataFrame(req_data['data']))
-    values = pd.Series()
+    # values = pd.Series()
     rainList = []
     orderList = []
     index = 0
@@ -55,8 +55,9 @@ ln(ln(data4['Return period']/(data4['Return period']-1)))
     X = data_df['x'].values.reshape(-1, 1)
     Y = data_df['y'].values.reshape(-1, 1)
     returnPeriod = req_data["returnPeriod"]
-    print("Return Period: ", returnPeriod)
-    linear_regressor.fit(X, Y)
+    # Y = Y[:-1]
+    print("X: ", len(Y[:-1]))
+    linear_regressor.fit(X[:-1], Y[:-1])
     slope = linear_regressor.coef_ * 100
     intercept = linear_regressor.intercept_
     q_value = slope * ln((int(req_data["returnPeriod"]))) + intercept
@@ -68,6 +69,11 @@ ln(ln(data4['Return period']/(data4['Return period']-1)))
     q_value = np.ndarray.tolist(q_value)
     intercept = np.ndarray.tolist(intercept)
     slope = np.ndarray.tolist(slope)
+
+    # # The graph
+    # returnPeriodColumn = req_data["returnPeriodColumn"]
+    # print(returnPeriodColumn)
+
     return ({"q_value": q_value, "slope": slope, "intercept": intercept})
 
 if __name__ == "__main__":
